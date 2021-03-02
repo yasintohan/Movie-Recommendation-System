@@ -1,5 +1,7 @@
 import pickle
 import os.path
+import sys
+import json
 from data_preprocessor import get_data
 from sklearn.model_selection import train_test_split
 import save_model
@@ -12,9 +14,15 @@ else:
     save_model.save()
     model=pickle.load(open('model.pkl','rb'))
 
-X_train, X_test = train_test_split(data, test_size= 0.001)
+if len(sys.argv) > 1:
+    ID = int(sys.argv[1]) -1
 
+X_test = data.loc[ID].to_frame().T
 
 preds=model.predict(X_test)
 
-print(preds)
+
+values = [[i+1 for i in row] for row in preds]
+feedback=json.dumps(values)
+
+print(feedback)

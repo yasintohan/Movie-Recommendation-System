@@ -20,46 +20,50 @@ class KNN():
         return predictions
     
     def closest(self, row):
-        best = self.get_dist(row, int(self.X_train.head(1).index.values[0]))
+        best = get_dist(row, row + 1)
         best_distances = [best for i in range(5)]
         best_indexes = [0 for i in range(5)]
         for i,label in self.X_train.iterrows():
+            dist = get_dist(row, i)
             if row != i:
-                dist = self.get_dist(row, i)
                 for j in range(len(best_distances)):
                     if dist < best_distances[j]:
                         best_distances[j] = dist
                         best_indexes[j] = i
                         break
+            else:
+                continue
+
         return best_indexes
     
-    def get_dist(self,movieId1, movieId2):
+def get_dist(movieId1, movieId2):
 
-        a = data.iloc[movieId1]
-        b = data.iloc[movieId2]
+
+    a = data.iloc[movieId1]
+    b = data.iloc[movieId2]
+    
+    scoreA = a['Meta_score']
+    scoreB = b['Meta_score']
+    scoreDistance = distance.euclidean(scoreA, scoreB)
+    
+    voteA = a['No_of_Votes']
+    voteB = b['No_of_Votes']
+    voteDistance = distance.euclidean(voteA, voteB)
+    
+    imdbA = a['IMDB_Rating']
+    imdbB = b['IMDB_Rating']
+    imdbDistance = distance.euclidean(imdbA, imdbB)
+    
+    runtimeA = a['Runtime']
+    runtimeB = b['Runtime']
+    runtimeDistance = distance.euclidean(int(runtimeA), int(runtimeB))
+    
+    yearA = a['Released_Year']
+    yearB = b['Released_Year']
+    yearDistance = distance.euclidean(int(yearA), int(yearB))
         
-        scoreA = a['Meta_score']
-        scoreB = b['Meta_score']
-        scoreDistance = distance.euclidean(scoreA, scoreB)
-        
-        voteA = a['No_of_Votes']
-        voteB = b['No_of_Votes']
-        voteDistance = distance.euclidean(voteA, voteB)
-        
-        imdbA = a['IMDB_Rating']
-        imdbB = b['IMDB_Rating']
-        imdbDistance = distance.euclidean(imdbA, imdbB)
-        
-        runtimeA = a['Runtime']
-        runtimeB = b['Runtime']
-        runtimeDistance = distance.euclidean(int(runtimeA), int(runtimeB))
-        
-        yearA = a['Released_Year']
-        yearB = b['Released_Year']
-        yearDistance = distance.euclidean(int(yearA), int(yearB))
-            
-        genresA = a['Genres']
-        genresB = b['Genres']
-        genresDistance = int(np.sum(abs(np.subtract(genresA,genresB))))
-        
-        return scoreDistance + voteDistance + imdbDistance + genresDistance + runtimeDistance + yearDistance
+    genresA = a['Genres']
+    genresB = b['Genres']
+    genresDistance = int(np.sum(abs(np.subtract(genresA,genresB))))
+    
+    return scoreDistance + voteDistance + imdbDistance + genresDistance + runtimeDistance + yearDistance

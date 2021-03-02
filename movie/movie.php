@@ -10,11 +10,17 @@ if(isset($_GET["id"])) {
 }
 
 
-$command = escapeshellcmd('python main.py');
+$command = escapeshellcmd("python main.py \"$id\"");
 $output = shell_exec($command);
-echo $output;
 $arr = json_decode($output);
-var_dump($arr);
+foreach($arr as $row){
+	foreach($row as $item){
+		echo $item;
+	}
+	
+}
+
+
 
 
 
