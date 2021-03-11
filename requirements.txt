@@ -1,5 +1,4 @@
 scipy
 pandas
 numpy
-json
 gunicorn
