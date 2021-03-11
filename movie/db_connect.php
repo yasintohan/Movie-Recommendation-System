@@ -21,7 +21,7 @@
 }
 catch(PDOException $e){
 	print $e->getMessage();
-	header("location: index.php");
+	//header("location: index.php");
 	
 }
 	
